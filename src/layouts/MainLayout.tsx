@@ -148,6 +148,7 @@ const Sidebar = ({ className }: { className?: string }) => {
  * Top header with search, notifications, and user actions
  */
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <header className="flex h-16 items-center justify-between border-b bg-background px-4">
       <div className="flex items-center gap-4">
@@ -159,7 +160,7 @@ const Header = () => {
         <Button variant="ghost" size="icon">
           <Bell className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={() => navigate('/chat')}>
           New Session
         </Button>
       </div>
