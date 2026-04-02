@@ -1,12 +1,133 @@
 /**
  * Hermes Dashboard API Layer
- * Type-safe CRUD operations for Supabase database
+ * Type-safe CRUD operations for Supabase database and HermessBridge
  */
 
 import { supabase, type Database } from './supabase';
 
 // =============================================================================
-// SESSIONS API
+// HERMESBRIDGE API
+// =============================================================================
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://hermes-portal.theagentagency.xyz';
+
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
+
+async function bridgeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const url = `${API_BASE_URL}${endpoint}`;
+
+  const defaultOptions: RequestInit = {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  try {
+    const response = await fetch(url, defaultOptions);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result: ApiResponse<T> = await response.json();
+
+    if (!result.success && result.error) {
+      throw new Error(result.error);
+    }
+
+    return result.data as T;
+  } catch (error) {
+    console.error(`Bridge API error for ${endpoint}:`, error);
+    throw error;
+  }
+}
+
+export const bridgeApi = {
+  // Cron Jobs
+  async getCronJobs() {
+    return bridgeRequest<any[]>('/api/cron/jobs');
+  },
+
+  async createCronJob(job: any) {
+    return bridgeRequest<any>('/api/cron/jobs', {
+      method: 'POST',
+      body: JSON.stringify(job),
+    });
+  },
+
+  async pauseCronJob(id: string) {
+    return bridgeRequest<any>(`/api/cron/jobs/${id}/pause`, {
+      method: 'POST',
+    });
+  },
+
+  async resumeCronJob(id: string) {
+    return bridgeRequest<any>(`/api/cron/jobs/${id}/resume`, {
+      method: 'POST',
+    });
+  },
+
+  async runCronJob(id: string) {
+    return bridgeRequest<any>(`/api/cron/jobs/${id}/run`, {
+      method: 'POST',
+    });
+  },
+
+  async deleteCronJob(id: string) {
+    // Note: DELETE requires /jobs endpoint with job ID
+    return bridgeRequest<any>(`/api/cron/jobs/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  // Sessions
+  async getSessions() {
+    return bridgeRequest<any[]>('/api/sessions');
+  },
+
+  async getSessionDetails(id: string) {
+    return bridgeRequest<any>(`/api/sessions/${id}`);
+  },
+
+  async deleteSession(id: string) {
+    return bridgeRequest<any>(`/api/sessions/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  async renameSession(id: string, newName: string) {
+    return bridgeRequest<any>(`/api/sessions/${id}/rename`, {
+      method: 'PUT',
+      body: JSON.stringify({ name: newName }),
+    });
+  },
+
+  // Status
+  async getStatus() {
+    return bridgeRequest<any>('/api/status');
+  },
+
+  async getGatewayStatus() {
+    return bridgeRequest<any>('/api/status/gateway');
+  },
+
+  async getCronStats() {
+    return bridgeRequest<any>('/api/status/cron');
+  },
+
+  async getSessionStats() {
+    return bridgeRequest<any>('/api/status/sessions');
+  },
+};
+
+// =============================================================================
+// SESSIONS API (Supabase)
 // =============================================================================
 
 export const sessionsApi = {
