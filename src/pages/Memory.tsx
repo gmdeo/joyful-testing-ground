@@ -397,18 +397,18 @@ export const MemoryPage = () => {
     return matchesSearch && matchesTarget && matchesAction;
   });
 
-  const handleView = (memory: Memory) => {
+  const handleView = (memory: MemoryType) => {
     setSelectedMemoryId(memory.id);
     setViewDialogOpen(true);
   };
 
-  const handleEdit = (memory: Memory) => {
+  const handleEdit = (memory: MemoryType) => {
     setSelectedMemoryId(memory.id);
     setViewDialogOpen(false);
     setEditDialogOpen(true);
   };
 
-  const handleSaveMemory = (updatedMemory: Memory) => {
+  const handleSaveMemory = (updatedMemory: MemoryType) => {
     setMemories(memories.map(m => m.id === updatedMemory.id ? updatedMemory : m));
   };
 
