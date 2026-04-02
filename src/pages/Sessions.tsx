@@ -134,7 +134,6 @@ export const Sessions = () => {
   const handleNewSession = () => {
     navigate('/chat');
   };
-  };
 
   const handleDelete = async (id: string) => {
     try {
