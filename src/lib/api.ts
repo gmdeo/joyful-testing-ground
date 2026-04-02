@@ -11,6 +11,7 @@ import { supabase, type Database } from './supabase';
 
 // Route all bridge calls through the hermes-proxy edge function
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${SUPABASE_URL}/functions/v1/hermes-proxy`;
 
 interface ApiResponse<T> {
