@@ -98,6 +98,7 @@ export const Sessions = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const fetchSessions = async () => {
