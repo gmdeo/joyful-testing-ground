@@ -131,24 +131,9 @@ export const Sessions = () => {
     fetchSessions();
   }, []);
 
-  const handleNewSession = async () => {
-    setCreating(true);
-    try {
-      await bridgeApi.getSessions(); // The bridge may support POST /api/sessions for creation
-      // Try creating via a chat message which starts a new session
-      toast({
-        title: 'New Session',
-        description: 'Navigate to the Chat page to start a new Hermes session.',
-      });
-    } catch (err) {
-      toast({
-        title: 'Error',
-        description: 'Could not create session. Check bridge connectivity.',
-        variant: 'destructive',
-      });
-    } finally {
-      setCreating(false);
-    }
+  const handleNewSession = () => {
+    navigate('/chat');
+  };
   };
 
   const handleDelete = async (id: string) => {
