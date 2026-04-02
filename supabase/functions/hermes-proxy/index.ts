@@ -2,19 +2,13 @@
  * HermessBridge Proxy Edge Function
  *
  * This Edge Function acts as a secure gateway between the Dashboard and the local Node.js bridge.
- * It forwards HTTP requests from the Dashboard to the local bridge, optionally syncing data to Supabase
- * using the service role secret (available via Deno.env).
+ * It forwards HTTP requests from the Dashboard to the Cloudflare Tunnel, which reaches the local bridge.
  *
  * Architecture:
- *   Dashboard → Edge Function (Cloud) → Local Bridge (localhost:3000) → Hermes CLI
+ *   Dashboard → Edge Function (Cloud) → Cloudflare Tunnel → Local Bridge (localhost:3000) → Hermes CLI
+ *
+ * Note: The local bridge is exposed via Cloudflare Tunnel at https://hermes-portal.theagentagency.xyz
  */
-
-import { serve } from 'https://deno.land/std@0.190.0/http/server.ts';
-
-// Configuration
-const LOCAL_BRIDGE_URL = Deno.env.get('LOCAL_BRIDGE_URL') || 'http://localhost:3000';
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 
 // Request/Response types
 interface BridgeResponse {
@@ -24,8 +18,13 @@ interface BridgeResponse {
   timestamp?: string;
 }
 
+// Configuration
+const LOCAL_BRIDGE_URL = Deno.env.get('LOCAL_BRIDGE_URL') || 'https://hermes-portal.theagentagency.xyz';
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
+
 /**
- * Forward request to local bridge
+ * Forward request to local bridge via Cloudflare Tunnel
  */
 async function forwardToBridge(
   path: string,
@@ -38,7 +37,7 @@ async function forwardToBridge(
     const requestHeaders = new Headers();
 
     // Copy relevant headers
-    const allowedHeaders = ['content-type', 'accept', 'origin'];
+    const allowedHeaders = ['content-type', 'accept', 'origin', 'authorization'];
     for (const header of allowedHeaders) {
       const value = headers.get(header);
       if (value) {
@@ -104,9 +103,9 @@ async function syncToSupabase(
 }
 
 /**
- * Main request handler
+ * Main request handler using modern Deno.serve()
  */
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
   const url = new URL(req.url);
   const path = url.pathname;
   const method = req.method;
@@ -120,7 +119,7 @@ serve(async (req: Request) => {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey',
       },
     });
   }
@@ -149,6 +148,7 @@ serve(async (req: Request) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey',
       },
     });
   } catch (error) {
@@ -165,16 +165,8 @@ serve(async (req: Request) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey',
       },
     });
   }
-}, {
-  port: 9000, // Default port for Edge Functions
-  onListen({ hostname, port }) {
-    console.log(`HermessBridge Proxy listening on http://${hostname}:${port}`);
-    console.log(`Forwarding to local bridge: ${LOCAL_BRIDGE_URL}`);
-    console.log(`Supabase sync enabled: ${!!SUPABASE_URL && !!SUPABASE_SERVICE_ROLE_KEY}`);
-  },
 });
-
-export default serve;
