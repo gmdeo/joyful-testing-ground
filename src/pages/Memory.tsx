@@ -51,12 +51,12 @@ import { cn } from '@/lib/utils';
  * Displays individual memory with metadata
  */
 interface MemoryEntryProps {
-  memory: Memory;
+  memory: MemoryType;
   isSelected: boolean;
   onSelect: (id: string) => void;
-  onEdit: (memory: Memory) => void;
+  onEdit: (memory: MemoryType) => void;
   onDelete: (id: string) => void;
-  onView: (memory: Memory) => void;
+  onView: (memory: MemoryType) => void;
 }
 
 const MemoryEntry = ({ 
