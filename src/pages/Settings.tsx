@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Settings as SettingsIcon,
   Save,
@@ -12,6 +12,7 @@ import {
   HardDrive,
   Server,
   Eye,
+  EyeOff,
   Moon,
   Sun,
   Monitor,
