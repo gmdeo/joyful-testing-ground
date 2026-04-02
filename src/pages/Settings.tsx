@@ -182,6 +182,30 @@ const ModelConfig = () => {
       />
 
       <SettingsItem
+        label={providerKeyLabels[config.provider] || 'API Key'}
+        description="Your provider API key (stored locally in browser)"
+        control={
+          <div className="flex gap-2 items-center">
+            <Input
+              type={showApiKey ? 'text' : 'password'}
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Enter API key..."
+              className="w-[200px]"
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowApiKey(!showApiKey)}
+              className="h-8 w-8"
+            >
+              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </Button>
+          </div>
+        }
+      />
+
+      <SettingsItem
         label="Model"
         description="Select the AI model to use"
         control={
