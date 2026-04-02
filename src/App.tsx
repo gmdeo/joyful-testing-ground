@@ -12,6 +12,7 @@ import Tasks from "./pages/Tasks";
 import CronJobs from "./pages/CronJobs";
 import MemoryPage from "./pages/Memory";
 import Tools from "./pages/Tools";
+import Chat from "./pages/Chat";
 import Integrations from "./pages/Integrations";
 import Settings from "./pages/Settings";
 import { Login as LoginPage } from "./pages/Login";
