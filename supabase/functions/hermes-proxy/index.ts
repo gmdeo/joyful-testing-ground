@@ -33,7 +33,12 @@ async function forwardToBridge(
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    return await response.json();
+    const data = await response.json();
+    // Normalize: bridge may not include `success` field
+    if (typeof data.success === 'undefined') {
+      data.success = response.ok;
+    }
+    return data;
   } catch (error) {
     console.error('Error forwarding to bridge:', error);
     return {
