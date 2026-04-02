@@ -31,8 +31,8 @@ const App = () => (
             {/* Login page - publicly accessible */}
             <Route path="/login" element={<LoginPage />} />
             
-            {/* Redirect root to dashboard */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            {/* Landing page */}
+            <Route path="/" element={<Index />} />
             
             {/* Main routes with layout - all protected */}
             <Route element={<MainLayout />}>
