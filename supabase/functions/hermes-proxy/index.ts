@@ -21,7 +21,7 @@ async function forwardToBridge(
   try {
     const bridgeUrl = new URL(path, LOCAL_BRIDGE_URL);
     const requestHeaders = new Headers();
-    const allowedHeaders = ['content-type', 'accept', 'origin', 'authorization'];
+    const allowedHeaders = ['content-type', 'accept', 'origin', 'authorization', 'x-api-key'];
     for (const header of allowedHeaders) {
       const value = headers.get(header);
       if (value) requestHeaders.set(header, value);
