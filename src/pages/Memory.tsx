@@ -51,12 +51,12 @@ import { cn } from '@/lib/utils';
  * Displays individual memory with metadata
  */
 interface MemoryEntryProps {
-  memory: Memory;
+  memory: MemoryType;
   isSelected: boolean;
   onSelect: (id: string) => void;
-  onEdit: (memory: Memory) => void;
+  onEdit: (memory: MemoryType) => void;
   onDelete: (id: string) => void;
-  onView: (memory: Memory) => void;
+  onView: (memory: MemoryType) => void;
 }
 
 const MemoryEntry = ({ 
@@ -173,7 +173,7 @@ const MemoryViewDialog = ({
 }: { 
   isOpen: boolean; 
   onClose: () => void; 
-  memory: Memory | null;
+  memory: MemoryType | null;
   onEdit: () => void;
   onDelete: () => void;
 }) => {
@@ -273,8 +273,8 @@ const MemoryEditDialog = ({
 }: { 
   isOpen: boolean; 
   onClose: () => void; 
-  memory: Memory | null;
-  onSave: (memory: Memory) => void;
+  memory: MemoryType | null;
+  onSave: (memory: MemoryType) => void;
 }) => {
   const [content, setContent] = useState(memory?.content || '');
   const [tags, setTags] = useState(memory?.tags?.join(', ') || '');
@@ -397,18 +397,18 @@ export const MemoryPage = () => {
     return matchesSearch && matchesTarget && matchesAction;
   });
 
-  const handleView = (memory: Memory) => {
+  const handleView = (memory: MemoryType) => {
     setSelectedMemoryId(memory.id);
     setViewDialogOpen(true);
   };
 
-  const handleEdit = (memory: Memory) => {
+  const handleEdit = (memory: MemoryType) => {
     setSelectedMemoryId(memory.id);
     setViewDialogOpen(false);
     setEditDialogOpen(true);
   };
 
-  const handleSaveMemory = (updatedMemory: Memory) => {
+  const handleSaveMemory = (updatedMemory: MemoryType) => {
     setMemories(memories.map(m => m.id === updatedMemory.id ? updatedMemory : m));
   };
 
@@ -646,4 +646,4 @@ export const MemoryPage = () => {
   );
 };
 
-export default Memory;
+export default MemoryPage;
