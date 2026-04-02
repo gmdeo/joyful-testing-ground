@@ -148,7 +148,6 @@ export const bridgeApi = {
   async getChatHistory(sessionId: string) {
     return bridgeRequest<any>(`/api/chat/${sessionId}/messages`);
   },
-  },
 };
 
 // =============================================================================
