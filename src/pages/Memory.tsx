@@ -173,7 +173,7 @@ const MemoryViewDialog = ({
 }: { 
   isOpen: boolean; 
   onClose: () => void; 
-  memory: Memory | null;
+  memory: MemoryType | null;
   onEdit: () => void;
   onDelete: () => void;
 }) => {
