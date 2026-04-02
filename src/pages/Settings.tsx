@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Settings as SettingsIcon,
   Save,
@@ -12,6 +12,7 @@ import {
   HardDrive,
   Server,
   Eye,
+  EyeOff,
   Moon,
   Sun,
   Monitor,
@@ -132,6 +133,13 @@ const SettingsItem = ({ label, description, control }: SettingsItemProps) => {
 /**
  * Model Configuration Component
  */
+const providerKeyLabels: Record<string, string> = {
+  venice: 'Venice AI API Key',
+  openai: 'OpenAI API Key',
+  anthropic: 'Anthropic API Key',
+  custom: 'API Key',
+};
+
 const ModelConfig = () => {
   const [config, setConfig] = useState({
     provider: 'venice',
@@ -142,6 +150,23 @@ const ModelConfig = () => {
     topP: 0.9,
     streamResponse: true,
   });
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
+
+  useEffect(() => {
+    const savedKey = localStorage.getItem(`hermes_apikey_${config.provider}`) || '';
+    setApiKey(savedKey);
+    setShowApiKey(false);
+    localStorage.setItem('hermes_provider', config.provider);
+  }, [config.provider]);
+
+  useEffect(() => {
+    if (apiKey) {
+      localStorage.setItem(`hermes_apikey_${config.provider}`, apiKey);
+    } else {
+      localStorage.removeItem(`hermes_apikey_${config.provider}`);
+    }
+  }, [apiKey, config.provider]);
 
   const providers = [
     { value: 'venice', label: 'Venice AI' },

@@ -1,6 +1,6 @@
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-api-key, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
 const LOCAL_BRIDGE_URL = Deno.env.get('LOCAL_BRIDGE_URL') || 'https://hermes-portal.theagentagency.xyz';
@@ -21,7 +21,7 @@ async function forwardToBridge(
   try {
     const bridgeUrl = new URL(path, LOCAL_BRIDGE_URL);
     const requestHeaders = new Headers();
-    const allowedHeaders = ['content-type', 'accept', 'origin', 'authorization'];
+    const allowedHeaders = ['content-type', 'accept', 'origin', 'authorization', 'x-api-key'];
     for (const header of allowedHeaders) {
       const value = headers.get(header);
       if (value) requestHeaders.set(header, value);

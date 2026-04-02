@@ -23,11 +23,21 @@ interface ApiResponse<T> {
 async function bridgeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  // Read API key from localStorage based on configured provider
+  const provider = localStorage.getItem('hermes_provider') || 'venice';
+  const apiKey = localStorage.getItem(`hermes_apikey_${provider}`) || '';
+
+  const extraHeaders: Record<string, string> = {};
+  if (apiKey) {
+    extraHeaders['x-api-key'] = apiKey;
+  }
+
   const defaultOptions: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_ANON_KEY,
       'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      ...extraHeaders,
       ...options.headers,
     },
     ...options,
