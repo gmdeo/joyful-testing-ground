@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   MessageSquare, 
   Search,
@@ -97,6 +98,7 @@ export const Sessions = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const fetchSessions = async () => {
@@ -129,24 +131,9 @@ export const Sessions = () => {
     fetchSessions();
   }, []);
 
-  const handleNewSession = async () => {
-    setCreating(true);
-    try {
-      await bridgeApi.getSessions(); // The bridge may support POST /api/sessions for creation
-      // Try creating via a chat message which starts a new session
-      toast({
-        title: 'New Session',
-        description: 'Navigate to the Chat page to start a new Hermes session.',
-      });
-    } catch (err) {
-      toast({
-        title: 'Error',
-        description: 'Could not create session. Check bridge connectivity.',
-        variant: 'destructive',
-      });
-    } finally {
-      setCreating(false);
-    }
+  const handleNewSession = () => {
+    navigate('/chat');
+  };
   };
 
   const handleDelete = async (id: string) => {

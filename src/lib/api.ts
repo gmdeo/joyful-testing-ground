@@ -129,6 +129,25 @@ export const bridgeApi = {
   async getSessionStats() {
     return bridgeRequest<any>('/api/status/sessions');
   },
+
+  // Chat
+  async startChat(prompt: string, options: Record<string, any> = {}) {
+    return bridgeRequest<any>('/api/chat/new', {
+      method: 'POST',
+      body: JSON.stringify({ prompt, options }),
+    });
+  },
+
+  async sendMessage(sessionId: string, message: string) {
+    return bridgeRequest<any>('/api/chat/message', {
+      method: 'POST',
+      body: JSON.stringify({ sessionId, message }),
+    });
+  },
+
+  async getChatHistory(sessionId: string) {
+    return bridgeRequest<any>(`/api/chat/${sessionId}/messages`);
+  },
 };
 
 // =============================================================================
