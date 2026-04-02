@@ -9,7 +9,9 @@ import { supabase, type Database } from './supabase';
 // HERMESBRIDGE API
 // =============================================================================
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://hermes-portal.theagentagency.xyz';
+// Route all bridge calls through the hermes-proxy edge function
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${SUPABASE_URL}/functions/v1/hermes-proxy`;
 
 interface ApiResponse<T> {
   success: boolean;
