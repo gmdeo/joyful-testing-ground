@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { 
+import {
   ArrowRight,
   ArrowLeft,
   GitBranch,
@@ -20,6 +20,7 @@ import {
   Check,
   Info,
   Link,
+  Sparkles,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

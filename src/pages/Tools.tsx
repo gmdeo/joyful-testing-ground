@@ -78,7 +78,7 @@ interface ToolDefinition {
  */
 interface ToolParameter {
   name: string;
-  type: 'string' | 'number' | 'boolean' | 'object' | 'array' | 'select';
+  type: 'string' | 'number' | 'boolean' | 'object' | 'array' | 'select' | 'textarea';
   label: string;
   description: string;
   required: boolean;

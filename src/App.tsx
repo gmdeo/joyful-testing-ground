@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Sessions from "./pages/Sessions";
 import Tasks from "./pages/Tasks";
 import CronJobs from "./pages/CronJobs";
-import Memory from "./pages/Memory";
+import MemoryPage from "./pages/Memory";
 import Tools from "./pages/Tools";
 import Integrations from "./pages/Integrations";
 import Settings from "./pages/Settings";
@@ -72,7 +72,7 @@ const App = () => (
                 path="/memory" 
                 element={
                   <ProtectedRoute>
-                    <Memory />
+                    <MemoryPage />
                   </ProtectedRoute>
                 } 
               />

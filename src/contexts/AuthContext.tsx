@@ -52,10 +52,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const data = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    if (error) {
+      throw error;
+    }
     if (data.session) {
       setSession(data.session);
       setUser(data.session.user);
@@ -63,10 +66,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async (email: string, password: string) => {
-    const data = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
+    if (error) {
+      throw error;
+    }
     if (data.session) {
       setSession(data.session);
       setUser(data.session.user);

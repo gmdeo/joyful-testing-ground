@@ -34,7 +34,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Memory } from '@/types';
+import type { Memory as MemoryType } from '@/types';
 import { cn } from '@/lib/utils';
 
 // ============================================================================
@@ -331,8 +331,8 @@ const MemoryEditDialog = ({
 /**
  * Memory Browser Page Component
  */
-export const Memory = () => {
-  const [memories, setMemories] = useState<Memory[]>(() => {
+export const MemoryPage = () => {
+  const [memories, setMemories] = useState<MemoryType[]>(() => {
     // Mock data - in production, would load from API
     return [
       {
