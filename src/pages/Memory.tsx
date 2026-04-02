@@ -646,4 +646,4 @@ export const MemoryPage = () => {
   );
 };
 
-export default Memory;
+export default MemoryPage;
