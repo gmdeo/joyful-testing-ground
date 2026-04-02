@@ -273,8 +273,8 @@ const MemoryEditDialog = ({
 }: { 
   isOpen: boolean; 
   onClose: () => void; 
-  memory: Memory | null;
-  onSave: (memory: Memory) => void;
+  memory: MemoryType | null;
+  onSave: (memory: MemoryType) => void;
 }) => {
   const [content, setContent] = useState(memory?.content || '');
   const [tags, setTags] = useState(memory?.tags?.join(', ') || '');
