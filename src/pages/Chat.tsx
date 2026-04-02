@@ -68,10 +68,14 @@ export const Chat = () => {
       setMessages(prev => [...prev, assistantMsg]);
     } catch (err) {
       console.error('Chat error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
+      const isEndpointMissing = errorMessage.includes('Endpoint not found');
       const errorMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: `⚠️ Error: ${err instanceof Error ? err.message : 'Failed to send message'}. Make sure your local bridge is running.`,
+        content: isEndpointMissing
+          ? `⚠️ The chat endpoint is not available on your local bridge.\n\nTo enable it, add chat routes to your bridge's \`index-simple.js\`:\n\n\`\`\`js\nconst chatRoutes = require('./routes/chat');\napp.use('/api/chat', chatRoutes);\n\`\`\`\n\nThen restart the bridge.`
+          : `⚠️ Error: ${errorMessage}. Make sure your local bridge is running.`,
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorMsg]);
