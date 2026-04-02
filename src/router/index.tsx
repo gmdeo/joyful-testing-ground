@@ -31,6 +31,13 @@ export const appRoutes: RouteConfig[] = [
     description: 'Overview of sessions, tasks, and system status',
   },
   {
+    path: '/chat',
+    title: 'Chat',
+    component: 'Chat',
+    icon: 'MessageSquare',
+    description: 'Chat with Hermes AI',
+  },
+  {
     path: '/sessions',
     title: 'Sessions',
     component: 'Sessions',

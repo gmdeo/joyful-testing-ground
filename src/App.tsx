@@ -54,6 +54,14 @@ const App = () => (
                 } 
               />
               <Route 
+                path="/chat" 
+                element={
+                  <ProtectedRoute>
+                    <Chat />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
                 path="/tasks" 
                 element={
                   <ProtectedRoute>
