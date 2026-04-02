@@ -1,21 +1,29 @@
 
 
-## Plan: Fix hermes-proxy Path Forwarding and CORS
+## Plan: Add Provider API Key to Model Configuration
 
-**Problem**: The edge function forwards the full URL path (e.g., `/hermes-proxy/health`) to the bridge, but the bridge expects paths without the prefix (e.g., `/health`). This causes "Endpoint not found" errors.
+**What**: Add an API key input field to the Model Configuration section in Settings. The key is stored in localStorage and sent to the bridge with every request, so the local Hermes CLI can authenticate with the selected provider (Venice AI, OpenAI, etc.).
 
 ### Changes
 
-**File: `supabase/functions/hermes-proxy/index.ts`**
+**1. `src/pages/Settings.tsx` — ModelConfig component (~lines 135-261)**
+- Add `apiKey` and `showApiKey` to state
+- Load/save API key from `localStorage` keyed by provider (e.g. `hermes_apikey_venice`)
+- Add a new `SettingsItem` after the Provider selector with a password input + eye toggle button
+- When provider changes, load the saved key for that provider
+- Add a Save button that persists both config and API key
 
-1. **Strip `/hermes-proxy` prefix** from the path before forwarding to the bridge (around line 110)
-2. **Add direct health check** — when path is `/hermes-proxy` with no sub-path, return a direct health response so the function itself can be tested
-3. **Fix CORS headers** — update `Access-Control-Allow-Headers` to include `x-client-info` and other headers the Supabase JS client sends
-4. **Remove `deno.json` and `deno.lock`** — these can cause deploy issues and aren't needed
+**2. `src/lib/api.ts` — bridgeRequest function (~line 23)**
+- Read the current provider from `localStorage` (`hermes_provider`)
+- Look up the API key from `localStorage` (`hermes_apikey_{provider}`)
+- If present, include it as an `x-api-key` header in the request
 
-### Expected Result
+**3. `supabase/functions/hermes-proxy/index.ts`**
+- Forward the `x-api-key` header from the incoming request to the bridge
 
-- `curl /hermes-proxy/health` → strips prefix → forwards `/health` to bridge → returns bridge health response
-- `curl /hermes-proxy/api/cron/jobs` → strips prefix → forwards `/api/cron/jobs` to bridge
-- Dashboard can call the function via `supabase.functions.invoke('hermes-proxy', ...)` with proper CORS
+**4. Local bridge (informational — user must update manually)**
+- `hermes-bridge/src/utils/hermes-cli.js`: read `x-api-key` from request headers and set it as the appropriate env var (e.g. `VENICE_API_KEY`) when spawning the CLI process
+
+### Security
+- Keys stay in the user's browser localStorage and only travel through their own edge function to their own local bridge — never stored in the cloud database.
 
