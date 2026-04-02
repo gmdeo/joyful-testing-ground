@@ -133,6 +133,13 @@ const SettingsItem = ({ label, description, control }: SettingsItemProps) => {
 /**
  * Model Configuration Component
  */
+const providerKeyLabels: Record<string, string> = {
+  venice: 'Venice AI API Key',
+  openai: 'OpenAI API Key',
+  anthropic: 'Anthropic API Key',
+  custom: 'API Key',
+};
+
 const ModelConfig = () => {
   const [config, setConfig] = useState({
     provider: 'venice',
@@ -143,6 +150,14 @@ const ModelConfig = () => {
     topP: 0.9,
     streamResponse: true,
   });
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
+
+  useEffect(() => {
+    const savedKey = localStorage.getItem(`hermes_apikey_${config.provider}`) || '';
+    setApiKey(savedKey);
+    setShowApiKey(false);
+  }, [config.provider]);
 
   const providers = [
     { value: 'venice', label: 'Venice AI' },
