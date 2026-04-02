@@ -26,6 +26,8 @@ async function bridgeRequest<T>(endpoint: string, options: RequestInit = {}): Pr
   const defaultOptions: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       ...options.headers,
     },
     ...options,
