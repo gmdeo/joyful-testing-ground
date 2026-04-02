@@ -157,7 +157,16 @@ const ModelConfig = () => {
     const savedKey = localStorage.getItem(`hermes_apikey_${config.provider}`) || '';
     setApiKey(savedKey);
     setShowApiKey(false);
+    localStorage.setItem('hermes_provider', config.provider);
   }, [config.provider]);
+
+  useEffect(() => {
+    if (apiKey) {
+      localStorage.setItem(`hermes_apikey_${config.provider}`, apiKey);
+    } else {
+      localStorage.removeItem(`hermes_apikey_${config.provider}`);
+    }
+  }, [apiKey, config.provider]);
 
   const providers = [
     { value: 'venice', label: 'Venice AI' },
