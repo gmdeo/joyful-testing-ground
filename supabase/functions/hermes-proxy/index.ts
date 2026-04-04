@@ -33,8 +33,18 @@ async function forwardToBridge(
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    const data = await response.json();
-    // Normalize: bridge may not include `success` field
+    const text = await response.text();
+    let data: any;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error('Bridge returned non-JSON response:', text.substring(0, 200));
+      return {
+        success: false,
+        error: 'Local bridge returned a non-JSON response. Is your Cloudflare tunnel running and the bridge started?',
+        timestamp: new Date().toISOString(),
+      };
+    }
     if (typeof data.success === 'undefined') {
       data.success = response.ok;
     }
